@@ -23,13 +23,8 @@ public class HashMap<K, V> implements Map<K, V> {
 	}
 
 	public V get(K key) {
-		int hash;
-		if (key == null) {
-			hash = 0;
-		} else {
-			hash = key.hashCode();
-		}
-		int position = Math.abs(hash % mapa.length);
+		int hash = getHash(key);
+		int position = getPosition(hash);
 		Node<K, V> node = mapa[position];
 		while (node != null) {
 			if (node.hash == hash && Objects.equals(key, node.key)) {
@@ -41,13 +36,8 @@ public class HashMap<K, V> implements Map<K, V> {
 	}
 
 	public V remove(K key) {
-		int hash;
-		if (key == null) {
-			hash = 0;
-		} else {
-			hash = key.hashCode();
-		}
-		int position = Math.abs(hash % mapa.length);
+		int hash = getHash(key);
+		int position = getPosition(hash);
 		if (mapa[position] == null) {
 			return null;
 		}
@@ -73,13 +63,8 @@ public class HashMap<K, V> implements Map<K, V> {
 	}
 
 	private boolean insert(K key, V value) {
-		int hash;
-		if (key == null) {
-			hash = 0;
-		} else {
-			hash = key.hashCode();
-		}
-		int position = Math.abs(hash % mapa.length);
+		int hash = getHash(key);
+		int position = getPosition(hash);
 
 		if (mapa[position] == null) {
 			mapa[position] = new Node<K, V>(hash, key, value);
@@ -99,6 +84,20 @@ public class HashMap<K, V> implements Map<K, V> {
 			size++;
 			return true;
 		}
+	}
+	
+	private int getHash(K key) {
+		int hash;
+		if (key == null) {
+			hash = 0;
+		} else {
+			hash = key.hashCode();
+		}
+		return hash;
+	}
+	
+	private int getPosition(int hash) {
+		return Math.abs(hash % mapa.length);
 	}
 
 	private void resize() {
